@@ -91,8 +91,13 @@ def gemini_text(system, user):
         with urllib.request.urlopen(req, timeout=180) as r:
             resp = json.loads(r.read())
     except urllib.error.HTTPError as e:
-        print(f"Gemini HTTP {e.code}: {e.read().decode(errors='replace')[:600]}", file=sys.stderr)
-        sys.exit(1 if e.code in (400, 401, 403, 404) else 0)
+        body = e.read().decode(errors="replace")[:600]
+        print(f"Gemini HTTP {e.code}: {body}", file=sys.stderr)
+        if e.code == 429 and "quota" in body.lower():
+            print("Hint: enable billing on the API key's Google Cloud project — Google Search "
+                  "grounding requires it (the free per-model request tiers still apply).", file=sys.stderr)
+        # Config/quota problems → fail loudly; transient 5xx/network → leave files untouched.
+        sys.exit(1 if e.code in (400, 401, 403, 404, 429) else 0)
     except Exception as e:
         print(f"Request failed: {e}", file=sys.stderr)
         sys.exit(0)
