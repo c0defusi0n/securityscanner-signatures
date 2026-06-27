@@ -59,8 +59,8 @@ source, and the samples it was validated against) and merge if it's sound.
 
 ```bash
 gh secret set GEMINI_API_KEY --repo c0defusi0n/securityscanner-signatures
-# optional model override (default gemini-2.5-flash):
-gh variable set GEMINI_MODEL --repo c0defusi0n/securityscanner-signatures --body gemini-2.5-pro
+# optional model override (default gemini-3.1-flash-lite):
+gh variable set GEMINI_MODEL --repo c0defusi0n/securityscanner-signatures --body gemini-3.5-flash
 # allow Actions to open PRs in this repo:
 gh api -X PUT repos/c0defusi0n/securityscanner-signatures/actions/permissions/workflow \
   -F default_workflow_permissions=write -F can_approve_pull_request_reviews=true
