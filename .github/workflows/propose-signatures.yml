@@ -6,7 +6,7 @@ name: Propose new signatures
 #
 # Setup (once):
 #   gh secret set GEMINI_API_KEY --repo c0defusi0n/securityscanner-signatures
-#   # optional model override (default gemini-3.1-flash-lite):
+#   # optional model override (default gemini-2.5-flash):
 #   gh variable set GEMINI_MODEL --repo c0defusi0n/securityscanner-signatures --body gemini-3.5-flash
 #   # and allow Actions to open PRs (done once via the API by the maintainer):
 #   gh api -X PUT repos/c0defusi0n/securityscanner-signatures/actions/permissions/workflow \
@@ -34,7 +34,7 @@ jobs:
       - name: Generate candidate signatures
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}   # optional override; defaults to gemini-3.1-flash-lite
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}   # optional override; defaults to gemini-2.5-flash
         run: python3 scripts/propose_signatures.py
 
       - name: Open / update pull request

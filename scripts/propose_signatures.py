@@ -19,7 +19,7 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 
-MODEL = os.environ.get("GEMINI_MODEL") or "gemini-3.1-flash-lite"
+MODEL = os.environ.get("GEMINI_MODEL") or "gemini-2.5-flash"
 SIG_PATH = os.environ.get("SIG_PATH") or "signatures.json"
 FEED_URL = os.environ.get("FEED_URL") or "https://raw.githubusercontent.com/c0defusi0n/securityscanner-feed/main/feed.json"
 MAX_NEW = int(os.environ.get("MAX_NEW") or "8")
