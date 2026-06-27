@@ -1,0 +1,30 @@
+{
+  "version": "2026-06-27",
+  "description": "Remote signature add-ons for C0defusi0n SecurityScanner. These patterns are MERGED ON TOP of the module's built-in baseline — put only NEW/extra detections here. Each 'regex' is a full PCRE pattern with delimiters and flags; invalid patterns are skipped by the module.",
+  "patterns": [
+    {
+      "id": "magecart-atob-fetch",
+      "severity": "critical",
+      "regex": "/atob\\s*\\([^)]*\\)[^;]*fetch\\s*\\(/is",
+      "description": "Base64-decoded payload piped into fetch() — common Magecart exfiltration shape"
+    },
+    {
+      "id": "webshell-assert-base64",
+      "severity": "high",
+      "regex": "/assert\\s*\\(\\s*base64_decode\\s*\\(/i",
+      "description": "assert()-based PHP webshell using base64-encoded code"
+    },
+    {
+      "id": "hidden-zero-iframe",
+      "severity": "medium",
+      "regex": "/<iframe[^>]+(?:width|height)\\s*=\\s*[\"']?0[\"']?/i",
+      "description": "Hidden zero-dimension iframe (clickjacking / silent loader)"
+    },
+    {
+      "id": "external-form-action",
+      "severity": "high",
+      "regex": "/<form[^>]+action\\s*=\\s*[\"']https?:\\/\\/(?!www\\.paypal\\.com)[^\"']+[\"']/i",
+      "description": "Checkout/login form posting to an external host (credential or card theft)"
+    }
+  ]
+}
