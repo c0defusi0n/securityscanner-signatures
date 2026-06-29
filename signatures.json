@@ -25,6 +25,20 @@
       "severity": "high",
       "regex": "/<form[^>]+action\\s*=\\s*[\"']https?:\\/\\/(?!www\\.paypal\\.com)[^\"']+[\"']/i",
       "description": "Checkout/login form posting to an external host (credential or card theft)"
+    },
+    {
+      "id": "webshell-wso-marker",
+      "severity": "critical",
+      "regex": "/(WSO_VERSION|WSO_X_KEY|WebShell by oRb)/i",
+      "description": "Detects common markers for the WSO (Web Shell by oRb) webshell, a popular PHP backdoor.",
+      "source": "https://sansec.io/blog/magento-webshell-detection"
+    },
+    {
+      "id": "webshell-c99-marker",
+      "severity": "critical",
+      "regex": "/(c99_shell|c99_sh|C99Shell)/i",
+      "description": "Detects common markers for the c99 webshell, a feature-rich PHP backdoor.",
+      "source": "https://sansec.io/blog/magento-webshell-detection"
     }
   ]
 }
