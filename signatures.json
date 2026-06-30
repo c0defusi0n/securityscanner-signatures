@@ -1,5 +1,5 @@
 {
-  "version": "2026-06-27",
+  "version": "2026-06-30",
   "description": "Remote signature add-ons for C0defusi0n SecurityScanner. These patterns are MERGED ON TOP of the module's built-in baseline — put only NEW/extra detections here. Each 'regex' is a full PCRE pattern with delimiters and flags; invalid patterns are skipped by the module.",
   "patterns": [
     {
@@ -39,6 +39,48 @@
       "regex": "/(c99_shell|c99_sh|C99Shell)/i",
       "description": "Detects common markers for the c99 webshell, a feature-rich PHP backdoor.",
       "source": "https://sansec.io/blog/magento-webshell-detection"
+    },
+    {
+      "id": "cve-2026-53787-amasty-probe",
+      "severity": "high",
+      "regex": "/<\\?php\\s*echo\\s*['\"]GOOD['\"];\\s*echo\\s*3\\*395;\\s*\\?>/i",
+      "description": "Detects the specific PHP probe left by attackers exploiting Amasty Order Attributes file upload vulnerability.",
+      "source": "https://sansec.io/research/amasty-order-attributes-vulnerability"
+    },
+    {
+      "id": "polyshell-webshell-md5",
+      "severity": "critical",
+      "regex": "/hash_equals\\s*\\(\\s*['\"]4009d3fa8132195a2dab4dfa3affc8d2['\"]/i",
+      "description": "Detects a specific MD5 hash used in a PolyShell webshell variant for password protection.",
+      "source": "https://sansec.io/research/polyshell-vulnerability"
+    },
+    {
+      "id": "polyshell-js-domain-lanhd",
+      "severity": "critical",
+      "regex": "/lanhd6549tdhse\\.top/i",
+      "description": "Detects malicious JavaScript injection domain associated with PolyShell attacks.",
+      "source": "https://sansec.io/research/polyshell-vulnerability"
+    },
+    {
+      "id": "polyshell-backdoor-accesson",
+      "severity": "critical",
+      "regex": "/(require|include)(_once)?\\s*\\(?[\\s'\"]*accesson\\.php[\\s'\"]*\\)?/i",
+      "description": "Detects references to 'accesson.php' backdoor file dropped by PolyShell attackers within PHP code.",
+      "source": "https://sansec.io/research/polyshell-vulnerability"
+    },
+    {
+      "id": "sessionreaper-c2-worcksbot",
+      "severity": "critical",
+      "regex": "/worcksbot\\.com/i",
+      "description": "Detects 'worcksbot.com' C2 domain used in SessionReaper post-exploitation.",
+      "source": "https://sansec.io/research/sessionreaper-vulnerability"
+    },
+    {
+      "id": "sessionreaper-c2-sagecrafft",
+      "severity": "critical",
+      "regex": "/sagecrafft\\.com/i",
+      "description": "Detects 'sagecrafft.com' C2 domain used in SessionReaper post-exploitation.",
+      "source": "https://sansec.io/research/sessionreaper-vulnerability"
     }
   ]
 }
