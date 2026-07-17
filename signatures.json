@@ -1,5 +1,5 @@
 {
-  "version": "2026-06-27",
+  "version": "2026-07-14",
   "description": "Remote signature add-ons for C0defusi0n SecurityScanner. These patterns are MERGED ON TOP of the module's built-in baseline — put only NEW/extra detections here. Each 'regex' is a full PCRE pattern with delimiters and flags; invalid patterns are skipped by the module.",
   "patterns": [
     {
@@ -39,6 +39,20 @@
       "regex": "/(c99_shell|c99_sh|C99Shell)/i",
       "description": "Detects common markers for the c99 webshell, a feature-rich PHP backdoor.",
       "source": "https://sansec.io/blog/magento-webshell-detection"
+    },
+    {
+      "id": "CVE-2026-53787-amasty-rce-probe",
+      "severity": "critical",
+      "regex": "/\\<\\?php\\s*echo\\s*['\"]GOOD['\"];\\s*echo\\s*\\d+\\*\\d+;\\s*\\?\\>/i",
+      "description": "Detects a known PHP code execution probe uploaded via the Amasty Order Attributes arbitrary file upload vulnerability (CVE-2026-53787).",
+      "source": "https://sansec.io/research/unauthenticated-file-upload-amasty-order-attributes-magento"
+    },
+    {
+      "id": "polyshell-gif-php-generic",
+      "severity": "high",
+      "regex": "/GIF89a[\\s\\S]*?\\<\\?php/is",
+      "description": "Detects generic PolyShell polyglot files (GIF header + PHP code) used for arbitrary file uploads and potential RCE.",
+      "source": "https://sansec.io/research/polyshell-magento-vulnerability"
     }
   ]
 }
