@@ -1,5 +1,5 @@
 {
-  "version": "2026-07-14",
+  "version": "2026-07-18",
   "description": "Remote signature add-ons for C0defusi0n SecurityScanner. These patterns are MERGED ON TOP of the module's built-in baseline — put only NEW/extra detections here. Each 'regex' is a full PCRE pattern with delimiters and flags; invalid patterns are skipped by the module.",
   "patterns": [
     {
@@ -53,6 +53,34 @@
       "regex": "/GIF89a[\\s\\S]*?\\<\\?php/is",
       "description": "Detects generic PolyShell polyglot files (GIF header + PHP code) used for arbitrary file uploads and potential RCE.",
       "source": "https://sansec.io/research/polyshell-magento-vulnerability"
+    },
+    {
+      "id": "cve-2026-45247-mirasvit-obj-inject",
+      "severity": "critical",
+      "regex": "/O:\\d+:\"Mirasvit\\\\CacheWarmer\\\\Model\\\\(ResourceModel\\\\)?Url\":\\d+:{/i",
+      "description": "Detects serialized PHP objects related to the Mirasvit Cache Warmer vulnerability, indicating potential object injection exploitation. This pattern would be found if the serialized payload is stored in a file or database entry.",
+      "source": "https://sansec.io/research/mirasvit-cache-warmer-vulnerability"
+    },
+    {
+      "id": "magento-layout-xml-malicious-template",
+      "severity": "high",
+      "regex": "/<block\\s+class=\"Magento\\\\Framework\\\\View\\\\Element\\\\Template\"\\s+name=\"[^\"]*?\"\\s+template=\"[^\"]*?::html\\/(?:malicious|backdoor|skimmer|system|shell)\\.phtml\"\\s*\\/>/i",
+      "description": "Detects suspicious Magento layout XML injection referencing a potentially malicious PHTML template, a known persistence mechanism for backdoors and skimmers.",
+      "source": "https://sansec.io/research/persistent-magento-backdoor-hidden-in-xml"
+    },
+    {
+      "id": "js-skimmer-btoa-cc-json",
+      "severity": "critical",
+      "regex": "/\\bbtoa\\s*\\(\\s*JSON\\.stringify\\s*\\(\\s*\\{[^}]*?(?:cc_number|cc_exp_month|cc_exp_year|cc_cid|card_number|card_exp_month|card_exp_year|card_cid)[^}]*\\}\\s*\\)\\s*\\)/i",
+      "description": "Detects JavaScript skimmer code attempting to base64-encode JSON containing common credit card details, a technique used for obfuscated data exfiltration.",
+      "source": "https://www.akamai.com/blog/security-research/magecart-campaign-abusing-legitimate-websites"
+    },
+    {
+      "id": "magento-template-validator-bypass",
+      "severity": "critical",
+      "regex": "/\\bfunction\\s+isValid\\s*\\(\\s*\\$file\\s*\\)\\s*\\{\\s*return\\s+true;\\s*\\}/i",
+      "description": "Detects modification in 'vendor/magento/framework/View/Element/Template/File/Validator.php' to bypass template file validation, allowing malicious templates to be loaded.",
+      "source": "https://www.reddit.com/r/magento2/comments/1902202/magento_24_how_to_override_vendormagentoframework/"
     }
   ]
 }
