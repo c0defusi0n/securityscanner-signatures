@@ -1,5 +1,5 @@
 {
-  "version": "2026-07-18",
+  "version": "2026-07-23",
   "description": "Remote signature add-ons for C0defusi0n SecurityScanner. These patterns are MERGED ON TOP of the module's built-in baseline — put only NEW/extra detections here. Each 'regex' is a full PCRE pattern with delimiters and flags; invalid patterns are skipped by the module.",
   "patterns": [
     {
@@ -81,6 +81,27 @@
       "regex": "/\\bfunction\\s+isValid\\s*\\(\\s*\\$file\\s*\\)\\s*\\{\\s*return\\s+true;\\s*\\}/i",
       "description": "Detects modification in 'vendor/magento/framework/View/Element/Template/File/Validator.php' to bypass template file validation, allowing malicious templates to be loaded.",
       "source": "https://www.reddit.com/r/magento2/comments/1902202/magento_24_how_to_override_vendormagentoframework/"
+    },
+    {
+      "id": "js-skimmer-wrapper-wrap-atob",
+      "severity": "critical",
+      "regex": "/wrapper\\.wrap\\s*\\(\\s*[^,]+,\\s*function\\s*\\(\\s*originalMethod\\s*\\)\\s*\\{\\s*(?:var\\s+\\w+\\s*=\\s*)?atob\\s*\\(\\s*['\"](?:[A-Za-z0-9+/=]{10,})['\"]\\s*\\)\\s*;(?:\\s*eval\\s*\\(\\s*\\w+\\s*\\))?/is",
+      "description": "Detects Magento JavaScript skimmers that use 'wrapper.wrap' to override core functions and inject 'atob'-decoded malicious code.",
+      "source": "https://sucuri.net/blog/skimmers-for-both-magento-and-wordpress/"
+    },
+    {
+      "id": "magento-admin-user-creation-backdoor",
+      "severity": "critical",
+      "regex": "/(?:new\\s+Magento\\\\User\\\\Model\\\\UserFactory|\\$this->userFactory->create\\(\\)|INSERT\\s+INTO\\s+`?admin_user`?\\s*\\(.*password.*\\))/is",
+      "description": "Detects PHP code attempting to create a new Magento admin user, a common backdoor for persistence.",
+      "source": "https://mageants.com/blog/magento-2-create-admin-user-programmatically"
+    },
+    {
+      "id": "js-skimmer-xhr-prototype-override",
+      "severity": "critical",
+      "regex": "/(?:XMLHttpRequest\\.prototype\\.(?:open|send)\\s*=\\s*function|Object\\.defineProperty\\s*\\(\\s*XMLHttpRequest\\.prototype\\s*,\\s*['\"](?:open|send)['\"])/is",
+      "description": "Detects JavaScript skimmers that override 'XMLHttpRequest.prototype.open' or 'send' to intercept network requests, a common technique for data exfiltration.",
+      "source": "https://medium.com/@marian.c001/intercept-xmlhttprequest-responses-by-overriding-prototype-properties-15e21222227"
     }
   ]
 }
