@@ -1,5 +1,5 @@
 {
-  "version": "2026-07-23",
+  "version": "2026-07-28",
   "description": "Remote signature add-ons for C0defusi0n SecurityScanner. These patterns are MERGED ON TOP of the module's built-in baseline — put only NEW/extra detections here. Each 'regex' is a full PCRE pattern with delimiters and flags; invalid patterns are skipped by the module.",
   "patterns": [
     {
@@ -102,6 +102,13 @@
       "regex": "/(?:XMLHttpRequest\\.prototype\\.(?:open|send)\\s*=\\s*function|Object\\.defineProperty\\s*\\(\\s*XMLHttpRequest\\.prototype\\s*,\\s*['\"](?:open|send)['\"])/is",
       "description": "Detects JavaScript skimmers that override 'XMLHttpRequest.prototype.open' or 'send' to intercept network requests, a common technique for data exfiltration.",
       "source": "https://medium.com/@marian.c001/intercept-xmlhttprequest-responses-by-overriding-prototype-properties-15e21222227"
+    },
+    {
+      "id": "magecart-skimmer-sendbeacon-malicious-domain",
+      "severity": "critical",
+      "regex": "/navigator\\.sendBeacon\\s*\\(\\s*['\"]https?:\\/\\/(?:staticfonts\\.com|lasorie\\.com)\\/[^'\"]*['\"]/is",
+      "description": "Detects a Magecart skimmer using navigator.sendBeacon to exfiltrate data to known malicious domains 'staticfonts.com' or 'lasorie.com', identified in recent campaigns.",
+      "source": "https://sucuri.net/blog/credit-card-skimmer-malware-targeting-magento-checkout-pages/, https://silentpush.com/blog/long-running-web-skimming-campaign-steals-credit-cards-from-online-checkout-pages"
     }
   ]
 }
