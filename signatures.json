@@ -1,5 +1,5 @@
 {
-  "version": "2026-08-14",
+  "version": "2026-08-25",
   "description": "Remote signature add-ons for C0defusi0n SecurityScanner. These patterns are MERGED ON TOP of the module's built-in baseline — put only NEW/extra detections here. Each 'regex' is a full PCRE pattern with delimiters and flags; invalid patterns are skipped by the module.",
   "patterns": [
     {
@@ -116,6 +116,27 @@
       "regex": "/<\\?php\\s*echo\\s*['\"]GOOD['\"];\\s*echo\\s*\\d+\\*\\d+;\\s*\\?>/is",
       "description": "Detects the specific PHP code execution probe known to be uploaded via CVE-2026-53787 (Amasty Order Attributes arbitrary file upload vulnerability). This probe is often dropped as a simple PHP file in the media directory to test RCE.",
       "source": "https://sansec.io/research/unauthenticated-file-upload-amasty-order-attributes-magento"
+    },
+    {
+      "id": "php-webshell-http-header-auth-cmd-exec",
+      "severity": "critical",
+      "regex": "/\\b(?:if\\s*\\(isset\\(\\s*\\$_SERVER\\s*\\[\\s*['\"]HTTP_X_DEBUG_CMD['\"]\\s*\\]\\s*\\)\\s*&&\\s*\\$_SERVER\\s*\\[\\s*['\"]HTTP_X_DEBUG_KEY['\"]\\s*\\]\\s*===\\s*['\"]([a-f0-9]{16,64})['\"]\\s*\\)\\s*\\{\\s*(?:echo\\s*['\"]<pre>['\"]\\s*;\\s*)?system\\s*\\(\\s*\\$_SERVER\\s*\\[\\s*['\"]HTTP_X_DEBUG_CMD['\"]\\s*\\]\\s*\\)\\s*;\\s*(?:echo\\s*['\"]<\\/pre>['\"]\\s*;\\s*)?exit\\s*;\\s*\\}|if\\s*\\(isset\\(\\s*\\$_SERVER\\s*\\[\\s*['\"]HTTP_X_AUTH_KEY['\"]\\s*\\]\\s*\\)\\s*&&\\s*\\$_SERVER\\s*\\[\\s*['\"]HTTP_X_AUTH_KEY['\"]\\s*\\]\\s*===\\s*['\"]([a-f0-9]{16,64})['\"]\\s*\\)\\s*\\{\\s*(?:echo\\s*['\"]<pre>['\"]\\s*;\\s*)?shell_exec\\s*\\(\\s*\\$_SERVER\\s*\\[\\s*['\"]HTTP_X_COMMAND['\"]\\s*\\]\\s*\\)\\s*;\\s*(?:echo\\s*['\"]<\\/pre>['\"]\\s*;\\s*)?exit\\s*;\\s*\\})/is",
+      "description": "Detects a PHP webshell that authenticates via specific HTTP headers (X-DEBUG-KEY or X-AUTH-KEY) and executes commands using system() or shell_exec().",
+      "source": "Based on common webshell patterns observed in post-exploitation scenarios, often found in compromised vendor files."
+    },
+    {
+      "id": "polyshell-accesson-php-beacon-webshell",
+      "severity": "critical",
+      "regex": "/\\b8194460\\b.*?eval\\s*\\(\\s*base64_decode\\s*\\(\\s*\\$_REQUEST\\s*\\[\\s*['\"]id['\"]\\s*\\]\\s*\\)\\s*\\)/is",
+      "description": "Detects the 'accesson.php' PolyShell post-exploitation webshell beacon (8194460) combined with cookie-authenticated RCE via eval(base64_decode($_REQUEST['id'])).",
+      "source": "https://sansec.io/research/polyshell-magento-vulnerability"
+    },
+    {
+      "id": "amasty-rce-mage-php-control-panel",
+      "severity": "critical",
+      "regex": "/\\b(?:Mage\\.php|mage_control\\.php)\\b.*?\\$(?:dbHost|dbUser|dbPass|dbName)\\s*=\\s*['\"].*?['\"].*?(?:SELECT\\s+\\*\\s+FROM\\s+admin_user|SELECT\\s+\\*\\s+FROM\\s+customer_entity)/is",
+      "description": "Detects the 'Mage.php Control Panel' webshell often deployed after Amasty RCE, characterized by specific filenames and database credential extraction/admin user queries.",
+      "source": "https://github.com/khadafigans/MAGENTO-AMASTY-RCE"
     }
   ]
 }
