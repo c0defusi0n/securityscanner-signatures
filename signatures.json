@@ -1,5 +1,5 @@
 {
-  "version": "2026-08-25",
+  "version": "2026-09-15",
   "description": "Remote signature add-ons for C0defusi0n SecurityScanner. These patterns are MERGED ON TOP of the module's built-in baseline — put only NEW/extra detections here. Each 'regex' is a full PCRE pattern with delimiters and flags; invalid patterns are skipped by the module.",
   "patterns": [
     {
@@ -137,6 +137,27 @@
       "regex": "/\\b(?:Mage\\.php|mage_control\\.php)\\b.*?\\$(?:dbHost|dbUser|dbPass|dbName)\\s*=\\s*['\"].*?['\"].*?(?:SELECT\\s+\\*\\s+FROM\\s+admin_user|SELECT\\s+\\*\\s+FROM\\s+customer_entity)/is",
       "description": "Detects the 'Mage.php Control Panel' webshell often deployed after Amasty RCE, characterized by specific filenames and database credential extraction/admin user queries.",
       "source": "https://github.com/khadafigans/MAGENTO-AMASTY-RCE"
+    },
+    {
+      "id": "cve-2026-75650-stylesmuggler-log-marker",
+      "severity": "critical",
+      "regex": "/(MGPROOF::|MGKWSIM::)[^<]*(?:<\\?php|eval\\(|shell_exec\\(|system\\(|passthru\\(|exec\\(|proc_open\\(|popen\\(|file_put_contents\\(|fwrite\\()/is",
+      "description": "Detects StyleSmuggler RCE markers (MGPROOF:: or MGKWSIM::) followed by common PHP execution functions, typically found in poisoned log or report files.",
+      "source": "https://sansec.io/research/stylesmuggler-magento-zero-day-rce-cve-2026-75650-under-active-attack#payload-analysis"
+    },
+    {
+      "id": "cve-2026-75650-stylesmuggler-oast-domain",
+      "severity": "high",
+      "regex": "/daf892t5qau4og8pi4cghbc6fhm1dim3u\\.oast\\.site/i",
+      "description": "Detects the specific OAST (Out-of-Band Application Security Testing) domain used by a StyleSmuggler dropper for callback/reconnaissance.",
+      "source": "https://sansec.io/research/stylesmuggler-magento-zero-day-rce-cve-2026-75650-under-active-attack#a-second-attacker"
+    },
+    {
+      "id": "cve-2025-47110-magento-template-injection",
+      "severity": "critical",
+      "regex": "/\\{\\{(?:config\\s+path=[\"'](?:web\\/unsecure\\/base_url|system\\/security\\/secret_key|payment\\/[^\"']*\\/api_key|db\\/connection\\/default\\/password)[\"']|block\\s+class=[\"'](?:Magento\\\\Framework\\\\View\\\\Element\\\\Template|[^\"']*\\\\Webshell|[^\"']*\\\\Rce)[^\"']*[\"']\\s+template=[\"'][^\"']*[\"'])\\}\\}/is",
+      "description": "Detects malicious Magento template directives attempting to leak sensitive configuration data or load arbitrary/malicious blocks/templates, indicative of Server-Side Template Injection (SSTI) or Stored XSS.",
+      "source": "https://helpx.adobe.com/security/products/magento/apsb25-50.html"
     }
   ]
 }
