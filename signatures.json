@@ -1,5 +1,5 @@
 {
-  "version": "2026-08-25",
+  "version": "2026-09-21",
   "description": "Remote signature add-ons for C0defusi0n SecurityScanner. These patterns are MERGED ON TOP of the module's built-in baseline — put only NEW/extra detections here. Each 'regex' is a full PCRE pattern with delimiters and flags; invalid patterns are skipped by the module.",
   "patterns": [
     {
@@ -137,6 +137,27 @@
       "regex": "/\\b(?:Mage\\.php|mage_control\\.php)\\b.*?\\$(?:dbHost|dbUser|dbPass|dbName)\\s*=\\s*['\"].*?['\"].*?(?:SELECT\\s+\\*\\s+FROM\\s+admin_user|SELECT\\s+\\*\\s+FROM\\s+customer_entity)/is",
       "description": "Detects the 'Mage.php Control Panel' webshell often deployed after Amasty RCE, characterized by specific filenames and database credential extraction/admin user queries.",
       "source": "https://github.com/khadafigans/MAGENTO-AMASTY-RCE"
+    },
+    {
+      "id": "cve-2026-75650-stylesmuggler-c2-ip",
+      "severity": "critical",
+      "regex": "/99\\.84\\.67\\.186/",
+      "description": "Detects the Command & Control (C2) IP address '99.84.67.186' associated with the Rust backdoor deployed by StyleSmuggler (CVE-2026-75650).",
+      "source": "https://sansec.io/research/stylesmuggler-magento-0day-rce-cve-2026-75650"
+    },
+    {
+      "id": "cve-2026-75650-stylesmuggler-cookie-marker",
+      "severity": "critical",
+      "regex": "/gl_google_advisor_824808/",
+      "description": "Detects the unique cookie name 'gl_google_advisor_824808' used as a marker by the StyleSmuggler (CVE-2026-75650) backdoor.",
+      "source": "https://sansec.io/research/stylesmuggler-magento-0day-rce-cve-2026-75650"
+    },
+    {
+      "id": "magecart-skimmer-exfil-ip-23-137-249-67",
+      "severity": "critical",
+      "regex": "/23\\.137\\.249\\.67/",
+      "description": "Detects the specific exfiltration IP address '23.137.249.67' associated with a large-scale Magecart campaign using SVG onload injection.",
+      "source": "https://sansec.io/research/svg-onload-tag-hides-magecart-skimmer-on-99-stores"
     }
   ]
 }
