@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-21",
+  "version": "2026-10-15",
   "description": "Remote signature add-ons for C0defusi0n SecurityScanner. These patterns are MERGED ON TOP of the module's built-in baseline — put only NEW/extra detections here. Each 'regex' is a full PCRE pattern with delimiters and flags; invalid patterns are skipped by the module.",
   "patterns": [
     {
@@ -158,6 +158,34 @@
       "regex": "/23\\.137\\.249\\.67/",
       "description": "Detects the specific exfiltration IP address '23.137.249.67' associated with a large-scale Magecart campaign using SVG onload injection.",
       "source": "https://sansec.io/research/svg-onload-tag-hides-magecart-skimmer-on-99-stores"
+    },
+    {
+      "id": "cve-2026-75650-stylesmuggler-js-skimmer-template-inject",
+      "severity": "critical",
+      "regex": "/\\{\\{block class=\"Magento\\\\Framework\\\\View\\\\Element\\\\Template\" area=\"frontend\" template=\"[^\"]+\"\\}\\}\\s*<script[^>]*>.*?<\\/script>/is",
+      "description": "Detects StyleSmuggler (CVE-2026-75650) template injection pattern where a legitimate Magento template block is immediately followed by an injected JavaScript skimmer script.",
+      "source": "https://sansec.io/research/stylesmuggler-magento-0-day-rce"
+    },
+    {
+      "id": "cve-2026-75650-stylesmuggler-php-rce-template-inject",
+      "severity": "critical",
+      "regex": "/\\{\\{(?:exec|system|shell_exec|passthru|proc_open|popen)\\s*(?:[^}]*?)\\}\\}|\\{\\{php\\s*(?:[^}]*?)\\}\\}|\\{\\{var\\s+\\$_GET\\[['\"]cmd['\"]\\]\\s*\\|\\s*raw\\s*\\}\\}|\\{\\{config\\s+path=['\"]design\\/email\\/(?:header|footer)_template['\"]\\s*\\}\\}\\s*<\\?php\\s*(?:[^?]*?)\\?>/is",
+      "description": "Detects StyleSmuggler (CVE-2026-75650) template injection patterns for PHP Remote Code Execution, including direct PHP execution functions within template directives or PHP code injected after template configuration paths.",
+      "source": "https://sansec.io/research/stylesmuggler-magento-0-day-rce"
+    },
+    {
+      "id": "js-skimmer-svg-onload-atob-injection",
+      "severity": "high",
+      "regex": "/<svg[^>]*?\\s+onload\\s*=\\s*['\"](?:[^\"']*?atob\\s*\\([^)]+\\)[^\"']*)['\"][^>]*>/is",
+      "description": "Detects Magecart skimmers hidden within invisible SVG elements using an 'onload' attribute containing obfuscated JavaScript (e.g., via atob).",
+      "source": "https://sansec.io/blog/svg-onload-tag-hides-magecart-skimmer"
+    },
+    {
+      "id": "magento-malicious-di-plugin-injection",
+      "severity": "high",
+      "regex": "/<type\\s+name=\"(?:Magento\\\\Framework\\\\App\\\\FrontControllerInterface|Magento\\\\Framework\\\\App\\\\Action\\\\Action)\">\\s*<plugin\\s+name=\"[^\"]+\"\\s+type=\"([A-Za-z0-9_\\\\]+)\"\\s*(?:sortOrder=\"[^\"]+\")?\\s*\\/>\\s*<\\/type>/is",
+      "description": "Detects the injection of malicious plugins into Magento's di.xml configuration, specifically targeting core classes like FrontControllerInterface or Action\\Action for interception and control.",
+      "source": "Common Magento persistence technique, e.g., via CVE-2024-20720 related XML injection"
     }
   ]
 }
