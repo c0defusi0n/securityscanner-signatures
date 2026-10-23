@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-21",
+  "version": "2026-10-23",
   "description": "Remote signature add-ons for C0defusi0n SecurityScanner. These patterns are MERGED ON TOP of the module's built-in baseline — put only NEW/extra detections here. Each 'regex' is a full PCRE pattern with delimiters and flags; invalid patterns are skipped by the module.",
   "patterns": [
     {
@@ -158,6 +158,13 @@
       "regex": "/23\\.137\\.249\\.67/",
       "description": "Detects the specific exfiltration IP address '23.137.249.67' associated with a large-scale Magecart campaign using SVG onload injection.",
       "source": "https://sansec.io/research/svg-onload-tag-hides-magecart-skimmer-on-99-stores"
+    },
+    {
+      "id": "cve-2026-48356-polyshell-hash-equals-webshell",
+      "severity": "critical",
+      "regex": "/\\<\\?php\\s*if\\s*\\(\\s*hash_equals\\s*\\(\\s*['\\\"]4009d3fa8132195a2dab4dfa3affc8d2['\\\"]\\s*,\\s*md5\\s*\\(\\s*\\$_COOKIE\\['p'\\]\\s*\\)\\s*\\)\\s*\\)\\s*\\{\\s*system\\s*\\(\\s*\\$_REQUEST\\['cmd'\\]\\s*\\)\\s*;\\s*\\}/is",
+      "description": "Detects a second PolyShell webshell variant using hash_equals with a specific MD5 hash (4009d3fa8132195a2dab4dfa3affc8d2) and system() for command execution.",
+      "source": "https://sansec.io/research/polyshell-magento-rce-cve-2026-48356"
     }
   ]
 }
