@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-21",
+  "version": "2026-11-10",
   "description": "Remote signature add-ons for C0defusi0n SecurityScanner. These patterns are MERGED ON TOP of the module's built-in baseline — put only NEW/extra detections here. Each 'regex' is a full PCRE pattern with delimiters and flags; invalid patterns are skipped by the module.",
   "patterns": [
     {
@@ -158,6 +158,27 @@
       "regex": "/23\\.137\\.249\\.67/",
       "description": "Detects the specific exfiltration IP address '23.137.249.67' associated with a large-scale Magecart campaign using SVG onload injection.",
       "source": "https://sansec.io/research/svg-onload-tag-hides-magecart-skimmer-on-99-stores"
+    },
+    {
+      "id": "cve-2026-103849-blockstrap-template-rce",
+      "severity": "critical",
+      "regex": "/\\{\\{\\s*config\\.template\\.email\\.sender_name\\s*\\|\\s*raw\\s*\\|\\s*base64_decode\\s*\\|\\s*(?:system|file_put_contents)\\s*(?::\\s*['\"]?[^'\"]*['\"]?)?\\s*\\}\\}/is",
+      "description": "Detects known BlockStrap (CVE-2026-103849) template engine injection payloads used for RCE via config.template.email.sender_name.",
+      "source": "https://sansec.io/research/blockstrap-magento-rce-cve-2026-103849"
+    },
+    {
+      "id": "magento-admin-user-factory-backdoor",
+      "severity": "critical",
+      "regex": "/(?:new\\s+Magento\\\\User\\\\Model\\\\UserFactory\\(\\)|->\\s*create\\s*\\(\\s*\\))\\s*->\\s*setData\\s*\\(\\s*\\[\\s*['\"]username['\"]\\s*=>\\s*['\"][^'\"]+['\"]\\s*,\\s*['\"]password['\"]\\s*=>\\s*['\"][^'\"]+['\"]\\s*,\\s*['\"]email['\"]\\s*=>\\s*['\"][^'\"]+['\"]\\s*,\\s*['\"]is_active['\"]\\s*=>\\s*1\\s*\\]\\s*\\)\\s*->\\s*save\\s*\\(\\s*\\)/is",
+      "description": "Detects PHP code attempting to create a new Magento admin user programmatically using the UserFactory and setData/save methods.",
+      "source": "Common Magento backdoor techniques"
+    },
+    {
+      "id": "js-skimmer-malicious-magento-cdn-domain",
+      "severity": "critical",
+      "regex": "/(?:https?:\\/\\/(?:www\\.)?|['\"])(?:magento-cdn\\.com|cdn-magento\\.com)\\/[a-zA-Z0-9\\/._-]+\\.(?:js|php|gif|png|jpg|svg|css|html|txt)/is",
+      "description": "Detects references to known malicious skimmer domains 'magento-cdn.com' or 'cdn-magento.com' used for exfiltration or loading malicious assets.",
+      "source": "Sansec reports on Magento skimmers"
     }
   ]
 }
